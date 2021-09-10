@@ -35,13 +35,14 @@ SOFTWARE.
 if (class_exists('GF_Field')) {
   class GF_Field_TextCaptcha extends GF_Field {
     public $type = 'text_captcha';
-
     public $length = 6;
     public $figlet_args = '-w 1000';
     public $font = 'roman';
     public $allowed_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    function __construct() {
+    function __construct($data = []) {
+      parent::__construct($data);
+
       // Parse system configuration.
       if (defined('GF_TEXT_CAPTCHA_LENGTH')) {
         $new_length = intval(GF_TEXT_CAPTCHA_LENGTH);
@@ -194,7 +195,6 @@ EOF;
     private function make_figlet_image($str) {
       $font_path = $this->get_fonts_path();
       $cmd = "figlet -d ${font_path} " . $this->figlet_args . ' -f ' . $this->font . ' ' . escapeshellcmd($str);
-      error_log("make_figlet_image() cmd: $cmd");
       // TODO: Handle error.
       return shell_exec($cmd);
     }
