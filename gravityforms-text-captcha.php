@@ -104,7 +104,9 @@ EOF;
 
       $captcha_art = htmlentities($this->make_figlet_image($captcha_str));
       $captcha_html = <<<EOF
-<div class="CAPTCHA"><pre>${captcha_art}</pre></div>
+<div class="gfield_text_captcha_str">
+  <pre>${captcha_art}</pre>
+</div>
 EOF;
 
       $input_attrs = "";
@@ -113,7 +115,9 @@ EOF;
       }
 
       $input_html = <<<EOF
-<div class="CAPTCHA_input"><input type="text" name="input_${id}[]" tabindex="1"${input_attrs} /></div>
+<div class="ginput_container ginput_container_text_captcha"">
+  <input type="text" id="input_${id}" name="input_${id}[]" tabindex="1"${input_attrs} />
+</div>
 EOF;
 
       $code_hex = bin2hex($code);
