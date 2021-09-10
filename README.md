@@ -35,9 +35,23 @@ $ apt install figlet
 # Manual Installation
 1. Create directory in WordPress: `wp-content/plugins/gravityforms-text-captcha`.
 2. Copy `gravityforms-text-captcha.php` and `fonts` to that directory.
-3. In WordPress admin, find plugin "Gravity Forms Text CAPTCHA" and activate.
+3. In WordPress admin, activate plugin "Gravity Forms Text CAPTCHA".
 
 # How to Use
-1. When building a form, find field "Text CAPTCHA" in the "Advanced" section.
-2. Add the Text CAPTCHA field.
-3. Enjoy little to no spam.
+1. When building a form, add field "Text CAPTCHA" from the "Advanced" section.
+2. Enjoy little to no spam.
+
+# Configuration
+Global constants set in wp-config.php:
+
+Constant                      | Default   | Description
+----------------------------- | --------- | -------------------------------
+`GF_TEXT_CAPTCHA_FIGLET_ARGS` | `-w 1000` | Additional arguments to Figlet.
+`GF_TEXT_CAPTCHA_FONT`        | `roman`   | Figlet font name.
+`GF_TEXT_CAPTCHA_LENGTH`      | 6         | CAPTCHA character length.
+
+Add additional fonts by copying font files (with `flf` file extension) to the
+`fonts` directory and setting `GF_TEXT_CAPTCHA_FONT` to the filename without
+extension.
+
+More Figlet fonts can be found at: http://www.figlet.org.
