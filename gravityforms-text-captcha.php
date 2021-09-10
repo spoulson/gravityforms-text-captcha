@@ -36,8 +36,17 @@ if (class_exists('GF_Field')) {
   class GF_Field_TextCaptcha extends GF_Field {
     public $type = 'text_captcha';
 
-    // TODO: Make length configurable.
     public $length = 6;
+
+    function __construct() {
+      // Parse system configuration.
+      if (defined('GF_TEXT_CAPTCHA_LENGTH')) {
+        $new_length = intval(GF_TEXT_CAPTCHA_LENGTH);
+        if ($new_length > 0) {
+          $this->length = $new_length;
+        }
+      }
+    }
 
     // TODO: Make font configurable.
     public $figlet_font = 'roman';
