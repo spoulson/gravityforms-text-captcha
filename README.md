@@ -2,8 +2,8 @@
 Because Google reCAPTCHA sucks.
 
 I've had it up to here --> * <--- with spam making it through Gravity Forms
-even with reCAPTCHA enabled.  A custom text-based CAPTCHA is less likely to be
-defeated by script kiddies.
+even with reCAPTCHA enabled.  I figure a custom text-based CAPTCHA is less
+likely to be defeated by script kiddies.
 
 This is a custom field for Gravity Forms that renders a Figlet text CAPTCHA
 easily readable by a human.
@@ -24,12 +24,10 @@ oooo    ooo  888   .d88'  888     888 oooo    ooo  .ooooo oo       ]8P'
 ```
 
 # System Requirements
-* You must be running Gravity Forms 2.5 or newer.
+* WordPress 5.8 or newer.
+* Gravity Forms 2.5 or newer.
 * Figlet installed on web server.
-   * For example on Debian-based systems:
-```
-$ apt install figlet
-```
+   * For example on Debian-based systems: `apt install figlet`
    * Test figlet with command such as `figlet Test` to render "Test" in ASCII art.
 
 # Manual Installation
@@ -44,14 +42,15 @@ $ apt install figlet
 # Configuration
 Global constants set in wp-config.php:
 
-Constant                      | Default   | Description
------------------------------ | --------- | -------------------------------
-`GF_TEXT_CAPTCHA_FIGLET_ARGS` | `-w 1000` | Additional arguments to Figlet.
-`GF_TEXT_CAPTCHA_FONT`        | `roman`   | Figlet font name.
-`GF_TEXT_CAPTCHA_LENGTH`      | 6         | CAPTCHA character length.
+Constant                        | Default         | Description
+------------------------------- | --------------- | --------------------------------------
+`GF_TEXT_CAPTCHA_ALLOWED_CHARS` | *alphanumerics* | Allowed characters for CAPTCHA string.
+`GF_TEXT_CAPTCHA_FIGLET_ARGS`   | `-w 1000`       | Additional arguments to Figlet.
+`GF_TEXT_CAPTCHA_FONT`          | `roman`         | Figlet font name.
+`GF_TEXT_CAPTCHA_LENGTH`        | 6               | CAPTCHA character length.
 
 Add additional fonts by copying font files (with `flf` file extension) to the
 `fonts` directory and setting `GF_TEXT_CAPTCHA_FONT` to the filename without
 extension.
 
-More Figlet fonts can be found at: http://www.figlet.org.
+To RTFM on Figlet and find more fonts, see http://www.figlet.org.

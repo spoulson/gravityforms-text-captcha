@@ -39,6 +39,7 @@ if (class_exists('GF_Field')) {
     public $length = 6;
     public $figlet_args = '-w 1000';
     public $font = 'roman';
+    public $allowed_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
     function __construct() {
       // Parse system configuration.
@@ -55,6 +56,10 @@ if (class_exists('GF_Field')) {
 
       if (defined('GF_TEXT_CAPTCHA_FIGLET_ARGS')) {
         $this->figlet_args = GF_TEXT_CAPTCHA_FIGLET_ARGS;
+      }
+
+      if (defined('GF_TEXT_CAPTCHA_ALLOWED_CHARS')) {
+        $this->allowed_chars = GF_TEXT_CAPTCHA_ALLOWED_CHARS;
       }
     }
 
@@ -118,20 +123,14 @@ EOF;
       return $captcha_html . $input_html . $hidden_html;
     }
 
-    // Return string of allowed CAPTCHA characters.
-    private function get_allowed_chars() {
-      return 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    }
-
     // Return a newly generates CAPTCHA string.
     private function generate_captcha_str() {
-      $allowed_chars = $this->get_allowed_chars();
       $captcha_str = '';
-      $rand_max = strlen($allowed_chars) - 1;
+      $rand_max = strlen($this->allowed_chars) - 1;
 
       for ($i = 0; $i < $this->length; $i++) {
         $r = random_int(0, $rand_max);
-        $captcha_str .= substr($allowed_chars, $r, 1);
+        $captcha_str .= substr($this->allowed_chars, $r, 1);
       }
 
       return $captcha_str;
