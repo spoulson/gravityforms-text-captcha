@@ -37,6 +37,8 @@ if (class_exists('GF_Field')) {
     public $type = 'text_captcha';
 
     public $length = 6;
+    public $figlet_args = '-w 1000';
+    public $font = 'roman';
 
     function __construct() {
       // Parse system configuration.
@@ -46,10 +48,15 @@ if (class_exists('GF_Field')) {
           $this->length = $new_length;
         }
       }
-    }
 
-    // TODO: Make font configurable.
-    public $figlet_font = 'roman';
+      if (defined('GF_TEXT_CAPTCHA_FONT')) {
+        $this->font = GF_TEXT_CAPTCHA_FONT;
+      }
+
+      if (defined('GF_TEXT_CAPTCHA_FIGLET_ARGS')) {
+        $this->figlet_args = GF_TEXT_CAPTCHA_FIGLET_ARGS;
+      }
+    }
 
     public function get_form_editor_inline_script_on_page_render() {
       return <<<EOF
@@ -181,13 +188,14 @@ EOF;
     }
 
     private function get_fonts_path() {
-      return plugin_dir_path(__FILE__) . DIRECTORY_SEPARATOR . 'fonts';
+      return plugin_dir_path(__FILE__) . 'fonts';
     }
 
     // Convert input string to text-based ASCII art.
     private function make_figlet_image($str) {
       $font_path = $this->get_fonts_path();
-      $cmd = 'figlet -f ' . $this->figlet_font . " -d ${font_path} -w 1000 " . escapeshellcmd($str);
+      $cmd = "figlet -d ${font_path} " . $this->figlet_args . ' -f ' . $this->font . ' ' . escapeshellcmd($str);
+      error_log("make_figlet_image() cmd: $cmd");
       // TODO: Handle error.
       return shell_exec($cmd);
     }
