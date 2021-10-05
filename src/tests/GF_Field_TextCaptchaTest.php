@@ -7,14 +7,13 @@ class GF_Field {
   }
 }
 
-function plugin_dir_path() {
-  return '.';
-}
-
-define('AUTH_SALT', 'FoobarSalt');
-define('AUTH_KEY', 'FoobarKey');
-
 final class GF_Field_TextCaptchaTest extends TestCase {
+  public function setUp(): void {
+    GF_Field_TextCaptcha::$salt = 'FoobarSalt';
+    GF_Field_TextCaptcha::$key = 'FoobarKey';
+    GF_Field_TextCaptcha::$fonts_path = dirname(__FILE__) . '/../../assets/fonts';
+  }
+
   public function testCanConfigureCaptchaLength(): void {
     $args = [
       'GF_TEXT_CAPTCHA_LENGTH' => 123
@@ -116,7 +115,7 @@ final class GF_Field_TextCaptchaTest extends TestCase {
 
     // Verify using different salt, expecting failure.
     $field2 = new GF_Field_TextCaptcha();
-    $field2->salt = 'Bogus';
+    GF_Field_TextCaptcha::$salt = 'Bogus';
     $result = $verify_captcha->invokeArgs($field2, [$captcha_str, $code]);
     $this->assertFalse($result);
   }
@@ -140,7 +139,7 @@ final class GF_Field_TextCaptchaTest extends TestCase {
 
     // Verify using different key, expecting failure.
     $field2 = new GF_Field_TextCaptcha();
-    $field2->key = 'Bogus';
+    GF_Field_TextCaptcha::$key = 'Bogus';
     $result = $verify_captcha->invokeArgs($field2, [$captcha_str, $code]);
     $this->assertFalse($result);
   }
