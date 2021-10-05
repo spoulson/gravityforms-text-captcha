@@ -14,38 +14,6 @@ final class GF_Field_TextCaptchaTest extends TestCase {
     GF_Field_TextCaptcha::$fonts_path = dirname(__FILE__) . '/../../assets/fonts';
   }
 
-  public function testCanConfigureCaptchaLength(): void {
-    $args = [
-      'GF_TEXT_CAPTCHA_LENGTH' => 123
-    ];
-    $field = new GF_Field_TextCaptcha($args);
-    $this->assertEquals(123, $field->length);
-  }
-
-  public function testCanConfigureFont(): void {
-    $args = [
-      'GF_TEXT_CAPTCHA_FONT' => 'FoobarFont'
-    ];
-    $field = new GF_Field_TextCaptcha($args);
-    $this->assertEquals('FoobarFont', $field->font);
-  }
-
-  public function testCanConfigureFigletArgs(): void {
-    $args = [
-      'GF_TEXT_CAPTCHA_FIGLET_ARGS' => 'FoobarArgs'
-    ];
-    $field = new GF_Field_TextCaptcha($args);
-    $this->assertEquals('FoobarArgs', $field->figlet_args);
-  }
-
-  public function testCanConfigureAllowedCharacters(): void {
-    $args = [
-      'GF_TEXT_CAPTCHA_ALLOWED_CHARS' => 'FoobarAllowedChars'
-    ];
-    $field = new GF_Field_TextCaptcha($args);
-    $this->assertEquals('FoobarAllowedChars', $field->allowed_chars);
-  }
-
   public function testCanGenerateCaptchaCode(): void {
     $class = new ReflectionClass('GF_Field_TextCaptcha');
     $generate_captcha_code = $class->getMethod('generate_captcha_code');

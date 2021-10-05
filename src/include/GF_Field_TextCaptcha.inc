@@ -1,60 +1,43 @@
 <?php
 class GF_Field_TextCaptcha extends GF_Field {
   public $type = 'text_captcha';
-  public $length = 6;
-  public $figlet_args = '-w 1000';
-  public $font = 'roman';
-  public $allowed_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  public static $length = 6;
+  public static $figlet_args = '-w 1000';
+  public static $font = 'roman';
+  public static $allowed_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   public static $salt;
   public static $key;
   public static $fonts_path;
 
   function __construct($data = []) {
     parent::__construct($data);
+  }
 
-    // Parse system configuration.
-    if (isset($data['GF_TEXT_CAPTCHA_LENGTH'])) {
-      $cfg_length = intval($data['GF_TEXT_CAPTCHA_LENGTH']);
-      if ($cfg_length > 0) {
-        $this->length = $cfg_length;
+  // Initialize global configuration.
+  // Store config in GF_Field_TextCaptcha static members.
+  public static function initialize() {
+    if (defined('GF_TEXT_CAPTCHA_LENGTH')) {
+      $length = intval(GF_TEXT_CAPTCHA_LENGTH);
+      if ($length > 0) {
+        GF_Field_TextCaptcha::$length = $length;
       }
     }
 
-    if (isset($data['GF_TEXT_CAPTCHA_FONT'])) {
-      $this->font = $data['GF_TEXT_CAPTCHA_FONT'];
-    }
-
-    if (isset($data['GF_TEXT_CAPTCHA_FIGLET_ARGS'])) {
-      $this->figlet_args = $data['GF_TEXT_CAPTCHA_FIGLET_ARGS'];
-    }
-
-    if (isset($data['GF_TEXT_CAPTCHA_ALLOWED_CHARS'])) {
-      $this->allowed_chars = $data['GF_TEXT_CAPTCHA_ALLOWED_CHARS'];
-    }
-  }
-
-  // Read global configuration.
-  // Returns array that can be passed to constructor.
-  public static function initialize_config() {
-    $args = [];
-
-    if (defined('GF_TEXT_CAPTCHA_LENGTH')) {
-      $args['GF_TEXT_CAPTCHA_LENGTH'] = GF_TEXT_CAPTCHA_LENGTH;
-    }
-
     if (defined('GF_TEXT_CAPTCHA_FONT')) {
-      $args['GF_TEXT_CAPTCHA_FONT'] = GF_TEXT_CAPTCHA_FONT;
+      GF_Field_TextCaptcha::$font = GF_TEXT_CAPTCHA_FONT;
     }
 
     if (defined('GF_TEXT_CAPTCHA_FIGLET_ARGS')) {
-      $args['GF_TEXT_CAPTCHA_FIGLET_ARGS'] = GF_TEXT_CAPTCHA_FIGLET_ARGS;
+      GF_Field_TextCaptcha::$figlet_args = GF_TEXT_CAPTCHA_FIGLET_ARGS;
     }
 
     if (defined('GF_TEXT_CAPTCHA_ALLOWED_CHARS')) {
-      $args['GF_TEXT_CAPTCHA_ALLOWED_CHARS'] = GF_TEXT_CAPTCHA_ALLOWED_CHARS;
+      GF_Field_TextCaptcha::$allowed_chars = GF_TEXT_CAPTCHA_ALLOWED_CHARS;
     }
 
-    return $args;
+    GF_Field_TextCaptcha::$salt = AUTH_SALT;
+    GF_Field_TextCaptcha::$key = AUTH_KEY;
+    GF_Field_TextCaptcha::$fonts_path = dirname(__FILE__) . '/../fonts';
   }
 
   // Render JavaScript function that sets form editor default settings.
@@ -130,11 +113,11 @@ EOF;
   // Return a newly generates CAPTCHA string.
   private function generate_captcha_str() {
     $captcha_str = '';
-    $rand_max = strlen($this->allowed_chars) - 1;
+    $rand_max = strlen(GF_Field_TextCaptcha::$allowed_chars) - 1;
 
-    for ($i = 0; $i < $this->length; $i++) {
+    for ($i = 0; $i < GF_Field_TextCaptcha::$length; $i++) {
       $r = random_int(0, $rand_max);
-      $captcha_str .= substr($this->allowed_chars, $r, 1);
+      $captcha_str .= substr(GF_Field_TextCaptcha::$allowed_chars, $r, 1);
     }
 
     return $captcha_str;
@@ -144,9 +127,9 @@ EOF;
   // Returns an unencoded binary string.
   private function generate_captcha_code($captcha_str) {
     // TODO: Use HMAC instead.
-    $secret = $this->get_key();
+    $secret = GF_Field_TextCaptcha::$key;
     $salt = openssl_random_pseudo_bytes(4);
-    $iv = hash_pbkdf2('sha1', $this->get_salt(), 0, 1, 16, true);
+    $iv = hash_pbkdf2('sha1', GF_Field_TextCaptcha::$salt, 0, 1, 16, true);
     $key = hash_pbkdf2('sha1', $secret, 0, 1, 32, true);
     $plaintext = $salt . $captcha_str;
     return openssl_encrypt($plaintext, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
@@ -156,9 +139,9 @@ EOF;
   // $code must be an unencoded binary string.
   // Returns true if CAPTCHA matches.
   private function verify_captcha($captcha_str, $code) {
-    $secret = $this->get_key();
+    $secret = GF_Field_TextCaptcha::$key;
     $ciphertext = $code;
-    $iv = hash_pbkdf2('sha1', $this->get_salt(), 0, 1, 16, true);
+    $iv = hash_pbkdf2('sha1', GF_Field_TextCaptcha::$salt, 0, 1, 16, true);
     $key = hash_pbkdf2('sha1', $secret, 0, 1, 32, true);
     $plaintext = openssl_decrypt($ciphertext, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
     if ($plaintext === false) {
@@ -186,33 +169,11 @@ EOF;
     }
   }
 
-  private function get_salt() {
-    if (empty(GF_Field_TextCaptcha::$salt)) {
-      GF_Field_TextCaptcha:$salt = AUTH_SALT;
-    }
-    return GF_Field_TextCaptcha::$salt;
-  }
-
-  private function get_key() {
-    if (empty(GF_Field_TextCaptcha::$key)) {
-      GF_Field_TextCaptcha:$key = AUTH_KEY;
-    }
-    return GF_Field_TextCaptcha::$key;
-  }
-
-  // Get path to Figlet fonts.
-  private function get_fonts_path() {
-    if (empty(GF_Field_TextCaptcha::$fonts_path)) {
-      GF_Field_TextCaptcha::$fonts_path = dirname(__FILE__) . '/../fonts';
-    }
-    return GF_Field_TextCaptcha::$fonts_path;
-  }
-
   // Render figlet text.
   // Convert input string to text-based ASCII art.
   private function make_figlet_image($str) {
-    $fonts_path = $this->get_fonts_path();
-    $cmd = "figlet -d ${fonts_path} " . $this->figlet_args . ' -f ' . $this->font . ' ' . escapeshellcmd($str);
+    $fonts_path = GF_Field_TextCaptcha::$fonts_path;
+    $cmd = "figlet -d ${fonts_path} " . $this->figlet_args . ' -f ' . GF_Field_TextCaptcha::$font . ' ' . escapeshellcmd($str);
     // TODO: Handle error.
     return shell_exec($cmd);
   }

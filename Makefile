@@ -14,6 +14,8 @@ build: init
 	mkdir -p build/gravityforms-text-captcha
 	cp -r assets/* src/include src/gravityforms-text-captcha.php build/gravityforms-text-captcha
 	tar -zcvf ${BUILD_ARTIFACT} -C build gravityforms-text-captcha
+	@echo
+	@echo Built artifact: ${BUILD_ARTIFACT}
 
 .PHONY: init
 init: githooks

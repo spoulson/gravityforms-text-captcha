@@ -33,7 +33,7 @@ oooo    ooo  888   .d88'  888     888 oooo    ooo  .ooooo oo       ]8P'
 # Manual Installation
 1. Run `make build` to build the file:
    `gravityforms-text-captcha-<version>.tar.gz`, where `<version>` corresponds
-   to the branch or tag name that is checked out.
+   to the branch name that is checked out.
 2. Untar this file into WordPress directory: `wp-content/plugins`.
 3. In WordPress admin, activate plugin "Gravity Forms Text CAPTCHA".
 
