@@ -6,11 +6,11 @@ default: test
 
 .PHONY: lint
 lint: init
-	./vendor/bin/phplint src
+	./vendor/bin/phplint
 
 .PHONY: test
 test: init
-	./vendor/bin/phpunit --testdox src/tests
+	./vendor/bin/phpunit
 
 .PHONY: build
 build: init
