@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Gravity Forms Text CAPTCHA
-Plugin URI:
+Plugin URI:  https://github.com/spoulson/gravityforms-text-captcha
 Description: Text-based CAPTCHA field for Gravity Forms.
-Version:     0.1
+Version:     0.1.0-alpha.1
 Author:      Shawn Poulson
 Author URI:  https://explodingcoder.com
 License:     MIT License
@@ -32,11 +32,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-if (class_exists('GF_Field')) {
-  require('GF_Field_TextCaptcha');
+if (class_exists('GF_Fields')) {
+  $path = plugin_dir_path(__FILE__);
+  require($path . 'include/GF_Field_TextCaptcha.inc');
 
-  // Initialize configuration from constants.
   $args = GF_Field_TextCaptcha::initialize_config();
+  // GF_Field_TextCaptcha::$fonts_path = dirname(__FILE__) . 'fonts';
+  $field = new GF_Field_TextCaptcha($args);
 
-  GF_Fields::register(new GF_Field_TextCaptcha($args));
+  GF_Fields::register($field);
 }

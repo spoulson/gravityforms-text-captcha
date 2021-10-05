@@ -5,6 +5,9 @@ class GF_Field_TextCaptcha extends GF_Field {
   public $figlet_args = '-w 1000';
   public $font = 'roman';
   public $allowed_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  public static $salt;
+  public static $key;
+  public static $fonts_path;
 
   function __construct($data = []) {
     parent::__construct($data);
@@ -28,10 +31,6 @@ class GF_Field_TextCaptcha extends GF_Field {
     if (isset($data['GF_TEXT_CAPTCHA_ALLOWED_CHARS'])) {
       $this->allowed_chars = $data['GF_TEXT_CAPTCHA_ALLOWED_CHARS'];
     }
-
-    $this->salt = AUTH_SALT;
-    $this->key = AUTH_KEY;
-    $this->fonts_path = plugin_dir_path(__FILE__) . 'fonts';
   }
 
   // Read global configuration.
@@ -145,9 +144,9 @@ EOF;
   // Returns an unencoded binary string.
   private function generate_captcha_code($captcha_str) {
     // TODO: Use HMAC instead.
-    $secret = $this->key;
+    $secret = $this->get_key();
     $salt = openssl_random_pseudo_bytes(4);
-    $iv = hash_pbkdf2('sha1', $this->salt, 0, 1, 16, true);
+    $iv = hash_pbkdf2('sha1', $this->get_salt(), 0, 1, 16, true);
     $key = hash_pbkdf2('sha1', $secret, 0, 1, 32, true);
     $plaintext = $salt . $captcha_str;
     return openssl_encrypt($plaintext, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
@@ -157,9 +156,9 @@ EOF;
   // $code must be an unencoded binary string.
   // Returns true if CAPTCHA matches.
   private function verify_captcha($captcha_str, $code) {
-    $secret = $this->key;
+    $secret = $this->get_key();
     $ciphertext = $code;
-    $iv = hash_pbkdf2('sha1', $this->salt, 0, 1, 16, true);
+    $iv = hash_pbkdf2('sha1', $this->get_salt(), 0, 1, 16, true);
     $key = hash_pbkdf2('sha1', $secret, 0, 1, 32, true);
     $plaintext = openssl_decrypt($ciphertext, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
     if ($plaintext === false) {
@@ -187,10 +186,32 @@ EOF;
     }
   }
 
+  private function get_salt() {
+    if (empty(GF_Field_TextCaptcha::$salt)) {
+      GF_Field_TextCaptcha:$salt = AUTH_SALT;
+    }
+    return GF_Field_TextCaptcha::$salt;
+  }
+
+  private function get_key() {
+    if (empty(GF_Field_TextCaptcha::$key)) {
+      GF_Field_TextCaptcha:$key = AUTH_KEY;
+    }
+    return GF_Field_TextCaptcha::$key;
+  }
+
+  // Get path to Figlet fonts.
+  private function get_fonts_path() {
+    if (empty(GF_Field_TextCaptcha::$fonts_path)) {
+      GF_Field_TextCaptcha::$fonts_path = dirname(__FILE__) . '/../fonts';
+    }
+    return GF_Field_TextCaptcha::$fonts_path;
+  }
+
   // Render figlet text.
   // Convert input string to text-based ASCII art.
   private function make_figlet_image($str) {
-    $fonts_path = $this->fonts_path;
+    $fonts_path = $this->get_fonts_path();
     $cmd = "figlet -d ${fonts_path} " . $this->figlet_args . ' -f ' . $this->font . ' ' . escapeshellcmd($str);
     // TODO: Handle error.
     return shell_exec($cmd);
