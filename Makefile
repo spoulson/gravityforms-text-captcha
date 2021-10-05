@@ -10,10 +10,10 @@ test: init
 
 .PHONY: build
 build: init
-	mkdir -p build
-	cp -r assets/* build
-	cp -r src/include build
-	tar -zcvf ${BUILD_ARTIFACT} -C build .
+	mkdir -p build/gravityforms-text-captcha
+	cp -r assets/* build/gravityforms-text-captcha
+	cp -r src/include build/gravityforms-text-captcha
+	tar -zcvf ${BUILD_ARTIFACT} -C build gravityforms-text-captcha
 
 .PHONY: init
 init: githooks

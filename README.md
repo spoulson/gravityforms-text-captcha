@@ -31,8 +31,10 @@ oooo    ooo  888   .d88'  888     888 oooo    ooo  .ooooo oo       ]8P'
    * Test figlet with command such as `figlet Test` to render "Test" in ASCII art.
 
 # Manual Installation
-1. Create directory in WordPress: `wp-content/plugins/gravityforms-text-captcha`.
-2. Copy `gravityforms-text-captcha.php` and `fonts` to that directory.
+1. Run `make build` to build the file:
+   `gravityforms-text-captcha-<version>.tar.gz`, where `<version>` corresponds
+   to the branch or tag name that is checked out.
+2. Untar this file into WordPress directory: `wp-content/plugins`.
 3. In WordPress admin, activate plugin "Gravity Forms Text CAPTCHA".
 
 # How to Use
@@ -54,3 +56,17 @@ Add additional fonts by copying font files (with `flf` file extension) to the
 extension.
 
 To RTFM on Figlet and find more fonts, see http://www.figlet.org.
+
+# Developer Setup
+1. Install Composer: https://getcomposer.org
+2. Run `composer install`.
+
+# Run Unit Tests
+```
+$ make test
+```
+
+Or run in container:
+```
+$ docker compose run --rm src test
+```
