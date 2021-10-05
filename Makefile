@@ -4,6 +4,10 @@ BUILD_ARTIFACT := gravityforms-text-captcha-${VERSION}.tar.gz
 .PHONY: default
 default: test
 
+.PHONY: lint
+lint: init
+	./vendor/bin/phplint src
+
 .PHONY: test
 test: init
 	./vendor/bin/phpunit --testdox src/tests
