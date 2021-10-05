@@ -61,12 +61,12 @@ To RTFM on Figlet and find more fonts, see http://www.figlet.org.
 1. Install Composer: https://getcomposer.org
 2. Run `composer install`.
 
-# Run Unit Tests
+# Source Verification
 ```
-$ make test
+$ make lint test
 ```
 
 Or run in container:
 ```
-$ docker compose run --rm src test
+$ docker compose run --rm src lint test
 ```
