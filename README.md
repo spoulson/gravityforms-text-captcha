@@ -10,18 +10,7 @@ easily readable by a human.
 
 For example:
 
-```
-            ooooooooo.   oooooooooo.                           .oooo.
-            `888   `Y88. `888'   `Y8b                        .dP""Y88b
-oooo    ooo  888   .d88'  888     888 oooo    ooo  .ooooo oo       ]8P'
- `88.  .8'   888ooo88P'   888oooo888'  `88.  .8'  d88' `888      .d8P'
-  `88..8'    888          888    `88b   `88..8'   888   888    .dP'
-   `888'     888          888    .88P    `888'    888   888  .oP     .o
-    .8'     o888o        o888bood8P'      .8'     `V8bod888  8888888888
-.o..P'                                .o..P'            888.
-`Y8P'                                 `Y8P'             8P'
-                                                        "
-```
+<img src="https://github.com/spoulson/gravityforms-text-captcha/raw/d3aab0b03a0c1f0ec06eee1ec8b4765a415dd37b/CAPTCHA%20example.png" width="500" alt="CAPTCHA example" />
 
 # Features
 * Easy to use out of the box.
