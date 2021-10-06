@@ -44,16 +44,16 @@ Global constants set in wp-config.php:
 Constant                        | Default         | Description
 ------------------------------- | --------------- | --------------------------------------
 `GF_TEXT_CAPTCHA_ALLOWED_CHARS` | *alphanumerics* | Allowed characters for CAPTCHA string.
-`GF_TEXT_CAPTCHA_FIGLET_ARGS`   | `-w 1000`       | Additional arguments to Figlet.
-`GF_TEXT_CAPTCHA_FONT`          | `roman`         | Figlet font name.
+`GF_TEXT_CAPTCHA_FIGLET_ARGS`   | -w 1000         | Additional arguments to Figlet.
+`GF_TEXT_CAPTCHA_FONT`          | roman           | Figlet font name.
 `GF_TEXT_CAPTCHA_LENGTH`        | 6               | CAPTCHA character length.
-`GF_TEXT_CAPTCHA_NOISE_COLORS`  | `#0A67A5,#E98F01,#C31D25,#E4E6EC,#E1C591` | Noise color scheme containing 1 or more colors, comma separated.
+`GF_TEXT_CAPTCHA_NOISE_COLORS`  | #0A67A5,#E98F01,#C31D25,#E4E6EC,#E1C591 | Noise color scheme containing 1 or more colors, comma separated.
 `GF_TEXT_CAPTCHA_NOISE_COUNT`   | 5               | Number of noisy shapes rendered on the CAPTCHA.
-`GF_TEXT_CAPTCHA_NOISE_HEIGHT_RANGE` | `20,200`   | Inclusive range of noise height in px, comma separated.
-`GF_TEXT_CAPTCHA_NOISE_OPACITY_RANGE` | `30,80`   | Inclusive range of noise opacity in percent, comma separated.
-`GF_TEXT_CAPTCHA_NOISE_WIDTH_RANGE` | `20,200`    | Inclusive range of noise width in px, comma separated.
-`GF_TEXT_CAPTCHA_NOISE_X_RANGE` | `-10,70`        | Inclusive range of noise X offset in percent, comma separated.
-`GF_TEXT_CAPTCHA_NOISE_Y_RANGE` | `-10,50`        | Inclusive range of noise Y offset in percent, comma separated.
+`GF_TEXT_CAPTCHA_NOISE_HEIGHT_RANGE` | 20,200     | Inclusive range of noise height in px, comma separated.
+`GF_TEXT_CAPTCHA_NOISE_OPACITY_RANGE` | 30,80     | Inclusive range of noise opacity in percent, comma separated.
+`GF_TEXT_CAPTCHA_NOISE_WIDTH_RANGE` | 20,200      | Inclusive range of noise width in px, comma separated.
+`GF_TEXT_CAPTCHA_NOISE_X_RANGE` | -10,70          | Inclusive range of noise X offset in percent, comma separated.
+`GF_TEXT_CAPTCHA_NOISE_Y_RANGE` | -10,50          | Inclusive range of noise Y offset in percent, comma separated.
 
 Add additional fonts by copying font files (with `flf` file extension) to the
 `fonts` directory and setting `GF_TEXT_CAPTCHA_FONT` to the filename without
