@@ -132,7 +132,6 @@ final class GF_Field_TextCaptchaTest extends TestCase {
     $make_figlet_image = $class->getMethod('make_figlet_image');
     $make_figlet_image->setAccessible(true);
     $field = new GF_Field_TextCaptcha();
-    $field->fonts_path = dirname(__FILE__) . '/../../assets/fonts';
     $captcha_str = 'Foobar';
 
     // Generate string.
@@ -140,5 +139,28 @@ final class GF_Field_TextCaptchaTest extends TestCase {
 
     // Verify.
     $this->assertNotEmpty($result);
+  }
+
+  public function testScramblesCaptchaLines(): void {
+    $class = new ReflectionClass('GF_Field_TextCaptcha');
+    $html_format_captcha_text = $class->getMethod('html_format_captcha_text');
+    $html_format_captcha_text->setAccessible(true);
+    $field = new GF_Field_TextCaptcha();
+    $captcha_str = 'Foobar';
+    $captcha_text = "AAA\nBBB\nCCC\nDDD\n";
+
+    // Call code.
+    $result = $html_format_captcha_text->invokeArgs($field, [$captcha_text]);
+
+    // Verify results are shuffled.
+    $unexpected = implode("\n", [
+      '<ul class="gfield_test_captcha_str">',
+      '<li style="order: 0">AAA</li>',
+      '<li style="order: 1">BBB</li>',
+      '<li style="order: 2">CCC</li>',
+      '<li style="order: 3">DDD</li>',
+      '</ul>'
+    ]);
+    $this->assertNotEquals($unexpected, $result);
   }
 }

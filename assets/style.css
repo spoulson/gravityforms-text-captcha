@@ -1,0 +1,13 @@
+UL.gfield_text_captcha_str {
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 1em 0;
+}
+UL.gfield_text_captcha_str > LI.gfield_text_captcha_line {
+  white-space: pre;
+  font-family: monospace;
+  unicode-bidi: embed;
+  line-height: 0.8em;
+  list-style: none;
+  user-select: none;
+}
