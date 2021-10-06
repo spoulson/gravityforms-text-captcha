@@ -42,9 +42,22 @@ if (class_exists('GF_Fields')) {
   GF_Fields::register($field);
 
   // Add custom CSS.
-  add_action('wp_enqueue_scripts', function () {
-    $url = plugin_dir_url(__FILE__);
-    wp_register_style('gravityforms-text-captcha', $url . 'style.css');
-    wp_enqueue_style('gravityforms-text-captcha');
-  });
+  if (is_admin()) {
+    // Admin page.
+    add_action('admin_enqueue_scripts', function ($hook_suffix) {
+      // Enqueue CSS if on edit form admin page.
+      if ($hook_suffix == 'toplevel_page_gf_edit_forms') {
+        $url = plugin_dir_url(__FILE__);
+        wp_register_style('gravityforms-text-captcha', $url . 'admin_style.css');
+        wp_enqueue_style('gravityforms-text-captcha');
+      }
+    });
+  } else {
+    // Normal page.
+    add_action('wp_enqueue_scripts', function () {
+      $url = plugin_dir_url(__FILE__);
+      wp_register_style('gravityforms-text-captcha', $url . 'style.css');
+      wp_enqueue_style('gravityforms-text-captcha');
+    });
+  }
 }
