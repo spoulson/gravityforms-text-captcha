@@ -1,5 +1,10 @@
+.gfield_text_captcha_wrapper {
+  position: relative;
+  overflow: hidden;
+}
 UL.gfield_text_captcha_str {
   display: flex;
+  position: relative;
   flex-flow: column nowrap;
   padding: 1em 0;
 }

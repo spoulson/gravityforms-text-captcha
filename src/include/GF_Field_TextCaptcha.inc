@@ -5,6 +5,13 @@ class GF_Field_TextCaptcha extends GF_Field {
   public static $figlet_args = '-w 1000';
   public static $font = 'roman';
   public static $allowed_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  public static $noise_count = 5;
+  public static $noise_colors = ['#0A67A5', '#E98F01', '#C31D25', '#E4E6EC', '#E1C591'];
+  public static $noise_opacity_range = [30, 80];
+  public static $noise_width_range = [20, 200];
+  public static $noise_height_range = [20, 200];
+  public static $noise_x_range = [-10, 70];
+  public static $noise_y_range = [-10, 50];
   public static $salt;
   public static $key;
   public static $fonts_path;
@@ -33,6 +40,44 @@ class GF_Field_TextCaptcha extends GF_Field {
 
     if (defined('GF_TEXT_CAPTCHA_ALLOWED_CHARS')) {
       GF_Field_TextCaptcha::$allowed_chars = GF_TEXT_CAPTCHA_ALLOWED_CHARS;
+    }
+
+    if (defined('GF_TEXT_CAPTCHA_NOISE_COUNT')) {
+      GF_Field_TextCaptcha::$noise_count = intval(GF_TEXT_CAPTCHA_NOISE_COUNT);
+    }
+
+    if (defined('GF_TEXT_CAPTCHA_NOISE_COLORS')) {
+      GF_Field_TextCaptcha::$noise_colors = explode(',', GF_TEXT_CAPTCHA_NOISE_COLORS);
+    }
+
+    if (defined('GF_TEXT_CAPTCHA_NOISE_OPACITY_RANGE')) {
+      $range = array_slice(explode(',', GF_TEXT_CAPTCHA_NOISE_OPACITY_RANGE), 0, 2);
+      $range = array_filter($range, intval);
+      GF_Field_TextCaptcha::$noise_opacity_range = $range;
+    }
+
+    if (defined('GF_TEXT_CAPTCHA_NOISE_WIDTH_RANGE')) {
+      $range = array_slice(explode(',', GF_TEXT_CAPTCHA_NOISE_WIDTH_RANGE), 0, 2);
+      $range = array_map('intval', $range);
+      GF_Field_TextCaptcha::$noise_width_range = $range;
+    }
+
+    if (defined('GF_TEXT_CAPTCHA_NOISE_HEIGHT_RANGE')) {
+      $range = array_slice(explode(',', GF_TEXT_CAPTCHA_NOISE_HEIGHT_RANGE), 0, 2);
+      $range = array_map('intval', $range);
+      GF_Field_TextCaptcha::$noise_height_range = $range;
+    }
+
+    if (defined('GF_TEXT_CAPTCHA_NOISE_X_RANGE')) {
+      $range = array_slice(explode(',', GF_TEXT_CAPTCHA_NOISE_X_RANGE), 0, 2);
+      $range = array_map('intval', $range);
+      GF_Field_TextCaptcha::$noise_x_range = $range;
+    }
+
+    if (defined('GF_TEXT_CAPTCHA_NOISE_Y_RANGE')) {
+      $range = array_slice(explode(',', GF_TEXT_CAPTCHA_NOISE_Y_RANGE), 0, 2);
+      $range = array_map('intval', $range);
+      GF_Field_TextCaptcha::$noise_y_range = $range;
     }
 
     GF_Field_TextCaptcha::$salt = AUTH_SALT;
@@ -84,6 +129,8 @@ EOF;
     $captcha_str = $this->generate_captcha_str();
     $code = $this->generate_captcha_code($captcha_str);
 
+    $noise_html = $this->html_noise();
+
     $captcha_text = htmlentities($this->make_figlet_image($captcha_str));
     $captcha_html = $this->html_format_captcha_text($captcha_text);
 
@@ -103,7 +150,12 @@ EOF;
 <input type="hidden" name="input_${id}[]" value="${code_hex}" class="gform_hidden" />
 EOF;
 
-    return $captcha_html . $input_html . $hidden_html;
+    return <<<EOF
+<div class="gfield_text_captcha_wrapper">
+  ${noise_html}${captcha_html}
+</div>
+${input_html}${hidden_html}
+EOF;
   }
 
   // Format raw output from figlet to HTML.
@@ -137,6 +189,53 @@ EOF;
 
     $out_lines[] = "</ul>";
     return implode("\n", $out_lines);
+  }
+
+  // Generate "noise" to appear over/under the CAPTCHA.
+  private function html_noise() {
+    $colors = GF_Field_TextCaptcha::$noise_colors;
+    $output = [];
+
+    for ($i = 0; $i < GF_Field_TextCaptcha::$noise_count; $i++) {
+      $opacity = rand(...GF_Field_TextCaptcha::$noise_opacity_range) / 100;
+      $width = rand(...GF_Field_TextCaptcha::$noise_width_range); // px
+      $height = rand(...GF_Field_TextCaptcha::$noise_height_range); // px
+      $left = rand(...GF_Field_TextCaptcha::$noise_x_range); // %
+      $top = rand(...GF_Field_TextCaptcha::$noise_y_range); // %
+      $z_index = rand(0, 1); // 0 = behind text, 1 = in front of text
+      $color = $colors[array_rand($colors)];
+      $rotation = rand(0, 359);
+      $shape = rand(0, 3);
+
+      switch ($shape) {
+      case 0:
+        // Circle.
+        $output[] = <<<EOF
+<div style="position:absolute; width:${width}px; height:${height}px; background:${color}; border-radius:50%; opacity:${opacity}; left:${left}%; top:${top}%; z-index:${z_index}; transform:rotate(${rotation}deg); transform-origin: 50% 50%"></div>
+EOF;
+        break;
+      case 1:
+        // Rectangle.
+        $output[] = <<<EOF
+<div style="position:absolute; width:${width}px; height:${height}px; opacity:${opacity}; left:${left}%; top:${top}%; background:${color}; z-index:${z_index}; transform:rotate(${rotation}deg); transform-origin: 50% 50%"></div>
+EOF;
+        break;
+      case 2:
+        // Isosceles triangle.
+        $half_width = $width / 2;
+        $output[] = <<<EOF
+<div style="position:absolute; width:0; height:0; border-left:${half_width}px solid transparent; border-right:${half_width}px solid transparent; border-bottom:${height}px solid ${color}; opacity:${opacity}; z-index:${z_index}; left:${left}%; top:${top}%; transform:rotate(${rotation}deg); transform-origin: 50% 50%"></div>
+EOF;
+        break;
+      case 3:
+        // Right triangle.
+        $output[] = <<<EOF
+<div style="position:absolute; width:0; height:0; border-bottom: ${height}px solid ${color}; border-right: ${width}px solid transparent; opacity:${opacity}; z-index:${z_index}; left:${left}%; top:${top}%; transform:rotate(${rotation}deg); transform-origin: 50% 50%"></div>
+EOF;
+      }
+    }
+
+    return implode("\n", $output);
   }
 
   // Return a newly generates CAPTCHA string.
