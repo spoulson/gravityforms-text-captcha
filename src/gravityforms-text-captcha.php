@@ -3,7 +3,7 @@
 Plugin Name: Gravity Forms Text CAPTCHA
 Plugin URI:  https://github.com/spoulson/gravityforms-text-captcha
 Description: Text-based CAPTCHA field for Gravity Forms.
-Version:     0.1.0-alpha.3
+Version:     0.1.0-alpha.4
 Author:      Shawn Poulson
 Author URI:  https://explodingcoder.com
 License:     MIT License
@@ -36,8 +36,15 @@ if (class_exists('GF_Fields')) {
   $path = plugin_dir_path(__FILE__);
   require($path . 'include/GF_Field_TextCaptcha.inc');
 
+  // Register field in Gravity Forms.
   GF_Field_TextCaptcha::initialize();
   $field = new GF_Field_TextCaptcha();
-
   GF_Fields::register($field);
+
+  // Add custom CSS.
+  add_action('wp_enqueue_scripts', function () {
+    $url = plugin_dir_url(__FILE__);
+    wp_register_style('gravityforms-text-captcha', $url . 'style.css');
+    wp_enqueue_style('gravityforms-text-captcha');
+  });
 }

@@ -84,12 +84,8 @@ EOF;
     $captcha_str = $this->generate_captcha_str();
     $code = $this->generate_captcha_code($captcha_str);
 
-    $captcha_art = htmlentities($this->make_figlet_image($captcha_str));
-    $captcha_html = <<<EOF
-<div class="gfield_text_captcha_str">
-<pre>${captcha_art}</pre>
-</div>
-EOF;
+    $captcha_text = htmlentities($this->make_figlet_image($captcha_str));
+    $captcha_html = $this->html_format_captcha_text($captcha_text);
 
     $input_attrs = "";
     if ($this->is_form_editor()) {
@@ -108,6 +104,39 @@ EOF;
 EOF;
 
     return $captcha_html . $input_html . $hidden_html;
+  }
+
+  // Format raw output from figlet to HTML.
+  // Scramble lines using flex-box ordering.
+  private function html_format_captcha_text($input) {
+    $lines = explode("\n", rtrim($input));
+    $indeces = range(0, count($lines) - 1);
+    $unshuffled_indeces = $indeces;
+
+    // Attempt to shuffle $indeces.
+    // If PHP is really lucky, it's possible shuffle can make no effective
+    // change.  So check and try again if necessary.
+    for ($i = 0; $i < 10; $i++) {
+      shuffle($indeces);
+
+      // Ensure indeces are shuffled.
+      if ($indeces != $unshuffled_indeces) {
+        break;
+      }
+    }
+
+    $out_lines = ['<ul class="gfield_text_captcha_str">'];
+
+    for ($i = 0; $i < count($lines); $i++) {
+      $rindex = $indeces[$i];
+      $rline = $lines[$rindex];
+      $out_lines[] = <<<EOF
+<li class="gfield_text_captcha_line" style="order: ${rindex}">${rline}</li>
+EOF;
+    }
+
+    $out_lines[] = "</ul>";
+    return implode("\n", $out_lines);
   }
 
   // Return a newly generates CAPTCHA string.
@@ -173,7 +202,8 @@ EOF;
   // Convert input string to text-based ASCII art.
   private function make_figlet_image($str) {
     $fonts_path = GF_Field_TextCaptcha::$fonts_path;
-    $cmd = "figlet -d ${fonts_path} " . $this->figlet_args . ' -f ' . GF_Field_TextCaptcha::$font . ' ' . escapeshellcmd($str);
+    $cmd = "figlet -d ${fonts_path} " . GF_Field_TextCaptcha::$figlet_args .
+      ' -f ' . GF_Field_TextCaptcha::$font . ' ' . escapeshellcmd($str);
     // TODO: Handle error.
     return shell_exec($cmd);
   }

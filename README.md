@@ -30,7 +30,7 @@ oooo    ooo  888   .d88'  888     888 oooo    ooo  .ooooo oo       ]8P'
    * For example on Debian-based systems: `apt install figlet`
    * Test figlet with command such as `figlet Test` to render "Test" in ASCII art.
 
-# Manual Installation
+# Installation from Source
 1. Run `make build` to build the file:
    `gravityforms-text-captcha-<version>.tar.gz`, where `<version>` corresponds
    to the branch name that is checked out.
