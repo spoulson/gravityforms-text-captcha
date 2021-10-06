@@ -141,7 +141,7 @@ EOF;
 
     $input_html = <<<EOF
 <div class="ginput_container ginput_container_text_captcha"">
-<input type="text" id="input_${id}" name="input_${id}[]" tabindex="1"${input_attrs} />
+<input type="text" id="input_${id}" name="input_${id}[]" class="large"${input_attrs} />
 </div>
 EOF;
 

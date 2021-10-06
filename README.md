@@ -39,7 +39,7 @@ For example:
 2. Enjoy little to no spam.
 
 # Configuration
-Global constants set in wp-config.php:
+Global constants optionally set in wp-config.php:
 
 Constant                        | Default         | Description
 ------------------------------- | --------------- | --------------------------------------
