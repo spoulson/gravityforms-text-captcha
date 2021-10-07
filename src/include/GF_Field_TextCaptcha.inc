@@ -197,15 +197,15 @@ EOF;
     $output = [];
 
     for ($i = 0; $i < GF_Field_TextCaptcha::$noise_count; $i++) {
-      $opacity = rand(...GF_Field_TextCaptcha::$noise_opacity_range) / 100;
-      $width = rand(...GF_Field_TextCaptcha::$noise_width_range); // px
-      $height = rand(...GF_Field_TextCaptcha::$noise_height_range); // px
-      $left = rand(...GF_Field_TextCaptcha::$noise_x_range); // %
+      $opacity = random_int(...GF_Field_TextCaptcha::$noise_opacity_range) / 100;
+      $width = random_int(...GF_Field_TextCaptcha::$noise_width_range); // px
+      $height = random_int(...GF_Field_TextCaptcha::$noise_height_range); // px
+      $left = random_int(...GF_Field_TextCaptcha::$noise_x_range); // %
       $top = rand(...GF_Field_TextCaptcha::$noise_y_range); // %
-      $z_index = rand(0, 1); // 0 = behind text, 1 = in front of text
+      $z_index = random_int(0, 1); // 0 = behind text, 1 = in front of text
       $color = $colors[array_rand($colors)];
-      $rotation = rand(0, 359);
-      $shape = rand(0, 3);
+      $rotation = random_int(0, 359);
+      $shape = random_int(0, 2);
 
       switch ($shape) {
       case 0:
@@ -221,17 +221,23 @@ EOF;
 EOF;
         break;
       case 2:
-        // Isosceles triangle.
-        $half_width = $width / 2;
-        $output[] = <<<EOF
-<div style="position:absolute; width:0; height:0; border-left:${half_width}px solid transparent; border-right:${half_width}px solid transparent; border-bottom:${height}px solid ${color}; opacity:${opacity}; z-index:${z_index}; left:${left}%; top:${top}%; transform:rotate(${rotation}deg); transform-origin: 50% 50%"></div>
+        // Triangle.
+        switch (random_int(0, 1)) {
+        case 0:
+          // Isosceles triangle.
+          $half_width = $width / 2;
+          $output[] = <<<EOF
+  <div style="position:absolute; width:0; height:0; border-left:${half_width}px solid transparent; border-right:${half_width}px solid transparent; border-bottom:${height}px solid ${color}; opacity:${opacity}; z-index:${z_index}; left:${left}%; top:${top}%; transform:rotate(${rotation}deg); transform-origin: 50% 50%"></div>
 EOF;
+          break;
+        case 1:
+          // Right triangle.
+          $output[] = <<<EOF
+  <div style="position:absolute; width:0; height:0; border-bottom: ${height}px solid ${color}; border-right: ${width}px solid transparent; opacity:${opacity}; z-index:${z_index}; left:${left}%; top:${top}%; transform:rotate(${rotation}deg); transform-origin: 50% 50%"></div>
+EOF;
+          break;
+        }
         break;
-      case 3:
-        // Right triangle.
-        $output[] = <<<EOF
-<div style="position:absolute; width:0; height:0; border-bottom: ${height}px solid ${color}; border-right: ${width}px solid transparent; opacity:${opacity}; z-index:${z_index}; left:${left}%; top:${top}%; transform:rotate(${rotation}deg); transform-origin: 50% 50%"></div>
-EOF;
       }
     }
 
