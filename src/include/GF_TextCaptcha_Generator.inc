@@ -10,10 +10,10 @@ class GF_TextCaptcha_Generator {
   }
 
   // Generate text CAPTCHA field HTML.
-  // $input_id: Form id.
+  // $field_id: Field id.
   // $is_editmode: True if rendering in form editor.
   // Returns HTML.
-  public function generate_html($input_id, $is_editmode) {
+  public function generate_html($field_id, $is_editmode) {
     $captcha_str = $this->generate_captcha_str();
     $code = $this->generate_captcha_code($captcha_str);
 
@@ -28,21 +28,31 @@ class GF_TextCaptcha_Generator {
     }
 
     $input_html = <<<EOF
-<div class="ginput_container ginput_container_text_captcha"">
-<input type="text" id="input_${input_id}" name="input_${input_id}[]" class="large"${input_attrs} />
+<div class="ginput_container ginput_container_text_captcha">
+<input type="text" id="input_${field_id}" name="input_${field_id}[]" class="large"${input_attrs} />
+</div>
+EOF;
+
+    $try_another_html = <<<EOF
+<div class="gfield_text_captcha_try_another">
+  <input type="button" class="gform_button button try_another" value="Try Another" onclick="window.GF_TextCaptcha.reloadCaptcha(${field_id})" />
 </div>
 EOF;
 
     $code_hex = bin2hex($code);
     $hidden_html = <<<EOF
-<input type="hidden" name="input_${input_id}[]" value="${code_hex}" class="gform_hidden" />
+<input type="hidden" name="input_${field_id}[]" value="${code_hex}" class="gform_hidden" />
 EOF;
 
     return <<<EOF
-<div class="gfield_text_captcha_wrapper">
-  ${noise_html}${captcha_html}
+<div class="gfield_text_captcha_container">
+  <div class="gfield_text_captcha_img">
+    ${noise_html}${captcha_html}
+  </div>
+  <div class="gfield_text_captcha_inputs">
+    ${input_html}${try_another_html}${hidden_html}
+  </div>
 </div>
-${input_html}${hidden_html}
 EOF;
   }
 
