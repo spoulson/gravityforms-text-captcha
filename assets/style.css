@@ -1,14 +1,14 @@
-.gfield_text_captcha_wrapper {
+.gfield_text_captcha_container .gfield_text_captcha_img {
   position: relative;
   overflow: hidden;
 }
-UL.gfield_text_captcha_str {
+.gfield_text_captcha_container UL.gfield_text_captcha_str {
   display: flex;
   position: relative;
   flex-flow: column nowrap;
   padding: 1em 0;
 }
-UL.gfield_text_captcha_str > LI.gfield_text_captcha_line {
+.gfield_text_captcha_container UL.gfield_text_captcha_str > LI.gfield_text_captcha_line {
   padding: 0;
   margin: 0;
   white-space: pre;
@@ -18,4 +18,16 @@ UL.gfield_text_captcha_str > LI.gfield_text_captcha_line {
   unicode-bidi: embed;
   list-style: none;
   user-select: none;
+}
+.gfield_text_captcha_container .gfield_text_captcha_inputs {
+  display: flex;
+  flex-flow: row nowrap;
+}
+.gfield_text_captcha_container .ginput_container_text_captcha {
+  display: inline-block;
+  width: 100%;
+}
+.gfield_text_captcha_container .gfield_text_captcha_try_another {
+  display: inline-block;
+  margin-left: 0.5em;
 }

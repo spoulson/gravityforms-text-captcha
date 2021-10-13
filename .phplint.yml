@@ -1,1 +1,4 @@
 path: src/
+extensions:
+  - php
+  - inc

@@ -34,10 +34,11 @@ SOFTWARE.
 
 if (class_exists('GF_Fields')) {
   $path = plugin_dir_path(__FILE__);
-  require($path . 'include/GF_Field_TextCaptcha.inc');
+  require_once($path . 'include/GF_TextCaptcha_API.inc');
+  require_once($path . 'include/GF_TextCaptcha_Config.inc');
+  require_once($path . 'include/GF_Field_TextCaptcha.inc');
 
   // Register field in Gravity Forms.
-  GF_Field_TextCaptcha::initialize();
   $field = new GF_Field_TextCaptcha();
   GF_Fields::register($field);
 
@@ -54,6 +55,14 @@ if (class_exists('GF_Fields')) {
     });
   } else {
     // Normal page.
+    // Register REST API endpoint for "Try Another" button.
+    add_action('rest_api_init', function () {
+      $cfg = new GF_TextCaptcha_Config();
+      $cfg->initialize();
+      $api = new GF_TextCaptcha_API($cfg);
+      $api->register_routes();
+    });
+
     add_action('wp_enqueue_scripts', function () {
       $url = plugin_dir_url(__FILE__);
       wp_register_style('gravityforms-text-captcha', $url . 'style.css');
