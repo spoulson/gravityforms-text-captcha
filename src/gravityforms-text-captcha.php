@@ -3,7 +3,7 @@
 Plugin Name: Gravity Forms Text CAPTCHA
 Plugin URI:  https://github.com/spoulson/gravityforms-text-captcha
 Description: Text-based CAPTCHA field for Gravity Forms.
-Version:     0.1.0-alpha.6
+Version:     0.1.0-alpha.7
 Author:      Shawn Poulson
 Author URI:  https://explodingcoder.com
 License:     MIT License
