@@ -55,7 +55,7 @@ if (class_exists('GF_Fields')) {
     });
   } else {
     // Normal page.
-    // Register REST API endpoint for "Try Another" button.
+    // Register REST API endpoints.
     add_action('rest_api_init', function () {
       $cfg = new GF_TextCaptcha_Config();
       $cfg->initialize();
