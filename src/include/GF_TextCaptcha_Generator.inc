@@ -12,15 +12,20 @@ class GF_TextCaptcha_Generator {
   // Generate text CAPTCHA field HTML.
   // $field_id: Field id.
   // $is_editmode: True if rendering in form editor.
+  // $render_captcha: True if rendering a CAPTCHA; false if just a blank template.
   // Returns HTML.
-  public function generate_html($field_id, $is_editmode) {
+  public function generate_html($field_id, $is_editmode, $render_captcha) {
     $captcha_str = $this->generate_captcha_str();
     $code = $this->generate_captcha_code($captcha_str);
 
-    $noise_html = $this->html_noise();
-
-    $captcha_text = htmlentities($this->make_figlet_image($captcha_str));
-    $captcha_html = $this->html_format_captcha_text($captcha_text);
+    if ($render_captcha || $is_editmode) {
+      $noise_html = $this->html_noise();
+      $captcha_text = htmlentities($this->make_figlet_image($captcha_str));
+      $captcha_html = $this->html_format_captcha_text($captcha_text);
+    } else {
+      $noise_html = "";
+      $captcha_html = "";
+    }
 
     $input_attrs = "";
     if ($is_editmode) {
@@ -35,7 +40,7 @@ EOF;
 
     $try_another_html = <<<EOF
 <div class="gfield_text_captcha_try_another">
-  <input type="button" class="gform_button button try_another" value="Try Another" onclick="window.GF_TextCaptcha.reloadCaptcha(${field_id})" />
+  <input type="button" class="gform_button button try_another" value="Try Another"$input_attrs onclick="window.GF_TextCaptcha.reloadCaptcha()" />
 </div>
 EOF;
 

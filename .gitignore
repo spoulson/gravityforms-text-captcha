@@ -3,3 +3,4 @@ vendor/
 gravityforms-text-captcha-*.tar.gz
 .phplint-cache
 .phpunit.result.cache
+.env

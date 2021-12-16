@@ -12,7 +12,7 @@ class GF_TextCaptcha_API {
   public function register_routes() {
     register_rest_route('gravityforms-text-captcha/v1', '/form/(?P<form_id>\d+)/captcha/(?P<field_id>\d+)', [
       'methods' => 'GET',
-      'callback' => [$this, 'get_captcha'],
+      'callback' => [$this, '_get_captcha'],
       'args' => [
         'form_id' => [
           'validate_callback' => function ($param, $request, $key) {
@@ -31,11 +31,13 @@ class GF_TextCaptcha_API {
   // Generate new CAPTCHA HTML for Text CAPTCHA field contents.
   // @param {WP_REST_Request} $request
   // @return {any} JSON serializable response content.
-  public function get_captcha(WP_REST_Request $request) {
+  public function _get_captcha(WP_REST_Request $request) {
     $field_id = (int) $request->get_param('field_id');
     $is_editmode = $request->get_param('editmode') != 'false';
-    return [
-      'html' => $this->generator->generate_html($field_id, $is_editmode)
-    ];
+    $response = new WP_REST_Response([
+      'html' => $this->generator->generate_html($field_id, $is_editmode, true)
+    ]);
+    $response->header('Cache-Control', 'no-cache');
+    return $response;
   }
 }

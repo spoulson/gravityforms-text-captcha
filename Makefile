@@ -1,8 +1,6 @@
 VERSION := $(shell git symbolic-ref -q --short HEAD)
 BUILD_ARTIFACT := gravityforms-text-captcha-${VERSION}.tar.gz
-
-.PHONY: default
-default: test
+.DEFAULT_GOAL := test
 
 .PHONY: lint
 lint: init

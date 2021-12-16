@@ -36,19 +36,19 @@ EOF;
   // @return {string} JavaScript to emit.
   public function get_form_inline_script_on_page_render($form) {
     $form_id = (int) rgar($form, 'id');
+    $field_id = $this->id;
     return <<<EOF
 window.GF_TextCaptcha = {
-  reloadCaptcha: function(fieldId) {
+  reloadCaptcha: function() {
     // Find field element.
-    fieldIdStr = fieldId.toString();
-    elemSelector = '#field_${form_id}_' + fieldIdStr;
+    elemSelector = '#field_${form_id}_${field_id}';
     jQuery(elemSelector).each(function (i, elem) {
       jQuery(elem).find('INPUT.try_another')
         .prop('disabled', true);
 
       // Call API for new CAPTCHA.
       jQuery.ajax({
-        url: '/wp-json/gravityforms-text-captcha/v1/form/${form_id}/captcha/' + fieldIdStr,
+        url: '/wp-json/gravityforms-text-captcha/v1/form/${form_id}/captcha/${field_id}/',
         type: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -76,6 +76,8 @@ window.GF_TextCaptcha = {
     });
   }
 };
+
+window.GF_TextCaptcha.reloadCaptcha();
 EOF;
   }
 
@@ -117,11 +119,8 @@ EOF;
   // @param {array|null} $entry Entry object currently being edited.
   // @return {string} HTML output.
   public function get_field_input($form, $value = '', $entry = null) {
-    // $form_id = (int) $this->id;
-    error_log('get_field_input() ' . serialize($this));
-    $field_id = 2;
     $is_editmode = $this->is_form_editor();
-    return GF_Field_TextCaptcha::$generator->generate_html($field_id, $is_editmode);
+    return GF_Field_TextCaptcha::$generator->generate_html($this->id, $is_editmode, false);
   }
 
   // Validate form input.
