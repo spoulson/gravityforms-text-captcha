@@ -40,7 +40,7 @@ EOF;
 
     $try_another_html = <<<EOF
 <div class="gfield_text_captcha_try_another">
-  <input type="button" class="gform_button button try_another" value="Try Another"$input_attrs onclick="window.GF_TextCaptcha.reloadCaptcha()" />
+  <input type="button" class="gform_button button try-another" value="Try Another"$input_attrs onclick="window.GF_TextCaptcha.reloadCaptcha()" />
 </div>
 EOF;
 
