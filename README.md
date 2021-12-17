@@ -74,3 +74,20 @@ Or run in container:
 ```
 $ docker compose run --rm src lint test
 ```
+
+# Testing in Dockerized WordPress
+A docker compose configuration is available to easily launch a fresh install of WordPress.
+```
+$ make start-wordpress
+```
+
+Browse to http://localhost:8080.  Default login is: admin/admin.
+
+On first start, you must:
+* Complete WordPress installation prompts.
+* Install and configure Gravity Forms plugin and any other plugins and themes by copying the necessary files to `wordpress/plugins` and `wordpress/themes`.
+* Deploy the most recently built gravityforms-text-captcha plugin with `make deploy`.
+
+```
+$ make stop-wordpress
+```

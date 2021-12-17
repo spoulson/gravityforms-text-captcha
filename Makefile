@@ -19,6 +19,10 @@ build: init
 	@echo
 	@echo Built artifact: ${BUILD_ARTIFACT}
 
+.PHONY: clean
+clean: init
+	rm -rf build ${BUILD_ARTIFACT}
+
 .PHONY: init
 init: githooks
 
@@ -27,3 +31,15 @@ githooks:
 	@if command -v git &> /dev/null; then \
 		git config core.hooksPath .githooks; \
 	fi
+
+.PHONY: start-wordpress
+start-wordpress:
+	docker-compose -f docker-compose-wordpress.yaml up -d
+
+.PHONY: stop-wordpress
+stop-wordpress:
+	docker-compose -f docker-compose-wordpress.yaml down
+
+.PHONY: deploy
+deploy:
+	tar -zxvf ${BUILD_ARTIFACT} -C wordpress/plugins

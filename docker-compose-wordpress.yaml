@@ -1,0 +1,34 @@
+# Browse to: http://localhost:8080
+# WordPress login: admin/admin
+version: "3.5"
+services:
+  wordpress:
+    build:
+      dockerfile: Dockerfile-wordpress
+    restart: always
+    user: 33:33
+    ports:
+      - 8080:80
+    volumes:
+      - wordpress_html:/var/www/html
+      - ./wordpress/plugins:/var/www/html/wp-content/plugins
+      - ./wordpress/themes:/var/www/html/wp-content/themes
+    environment:
+      - WORDPRESS_DB_HOST=mysql
+      - WORDPRESS_DB_NAME=wordpress
+      - WORDPRESS_DB_PASSWORD=wp
+      - WORDPRESS_DB_USER=wp
+      - WORDPRESS_DEBUG=1
+  mysql:
+    image: mysql:8
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_PASSWORD=wp
+      - MYSQL_ROOT_PASSWORD=mysql
+      - MYSQL_USER=wp
+volumes:
+  wordpress_html:
+  mysql_data:
