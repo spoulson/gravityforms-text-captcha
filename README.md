@@ -85,8 +85,9 @@ Browse to http://localhost:8080.  Default login is: admin/admin.
 
 On first start, you must:
 * Complete WordPress installation prompts.
-* Install and configure Gravity Forms plugin and any other plugins and themes by copying the necessary files to `wordpress/plugins` and `wordpress/themes`.
+* Install and configure Gravity Forms plugin and any other plugins and themes by copying the necessary files to `wordpress/wp-content/...`.
 * Deploy the most recently built gravityforms-text-captcha plugin with `make deploy`.
+* If necessary, edit configuration of `wordpress/wp-config.php`.
 
 ```
 $ make stop-wordpress
