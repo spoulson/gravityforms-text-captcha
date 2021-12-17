@@ -42,4 +42,4 @@ stop-wordpress:
 
 .PHONY: deploy
 deploy:
-	tar -zxvf ${BUILD_ARTIFACT} -C wordpress/plugins
+	tar -zxvf ${BUILD_ARTIFACT} -C wordpress/wp-content/plugins

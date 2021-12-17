@@ -10,9 +10,7 @@ services:
     ports:
       - 8080:80
     volumes:
-      - wordpress_html:/var/www/html
-      - ./wordpress/plugins:/var/www/html/wp-content/plugins
-      - ./wordpress/themes:/var/www/html/wp-content/themes
+      - ./wordpress:/var/www/html
     environment:
       - WORDPRESS_DB_HOST=mysql
       - WORDPRESS_DB_NAME=wordpress
@@ -30,5 +28,4 @@ services:
       - MYSQL_ROOT_PASSWORD=mysql
       - MYSQL_USER=wp
 volumes:
-  wordpress_html:
   mysql_data:
