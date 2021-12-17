@@ -44,8 +44,8 @@ window.GF_TextCaptcha = {
     elemSelector = '#field_${form_id}_${field_id}';
     jQuery(elemSelector).each(function (i, elem) {
       jQuery(elem)
-        .addClass('captcha_loading')
-        .find('INPUT.try_another')
+        .addClass('captcha-loading')
+        .find('INPUT.try-another')
         .prop('disabled', true);
 
       // Call API for new CAPTCHA.
@@ -72,8 +72,8 @@ window.GF_TextCaptcha = {
         },
         complete: function () {
           jQuery(elem)
-            .removeClass('captcha_loading')
-            .find('.ginput_container_text_captcha > INPUT, INPUT.try_another')
+            .removeClass('captcha-loading')
+            .find('.ginput_container_text_captcha > INPUT, INPUT.try-another')
             .prop('disabled', false);
         }
       });
