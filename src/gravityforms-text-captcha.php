@@ -58,7 +58,6 @@ if (class_exists('GF_Fields')) {
     // Register REST API endpoints.
     add_action('rest_api_init', function () {
       $cfg = new GF_TextCaptcha_Config();
-      $cfg->initialize();
       $api = new GF_TextCaptcha_API($cfg);
       $api->register_routes();
     });

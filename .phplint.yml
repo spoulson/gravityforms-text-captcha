@@ -1,4 +1,6 @@
 path: src/
+exclude:
+  - src/vendor
 extensions:
   - php
   - inc

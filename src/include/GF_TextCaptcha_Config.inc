@@ -2,8 +2,22 @@
 // Text CAPTCHA field configuration class.
 class GF_TextCaptcha_Config {
   public $length = 6;
-  public $figlet_args = '-w 1000';
+  public $width = 1000;
   public $font = 'roman';
+
+  // Smush layout modes bitmask.
+  // See: https://github.com/laminas/laminas-text/blob/8879e75d03e09b0d6787e6680cfa255afd4645a7/src/Figlet/Figlet.php#L21
+  // Default (0)  = SM_KERN
+  // -1           = No smush
+  // SM_EQUAL     = 0x01
+  // SM_LOWLINE   = 0x02
+  // SM_HIERARCHY = 0x04
+  // SM_PAIR      = 0x08
+  // SM_BIGX      = 0x10
+  // SM_HARDBLANK = 0x20
+  // SM_KERN      = 0x40
+  public $smush_mode = 0; // range [-1, 63]
+
   public $allowed_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   public $noise_count = 5;
   public $noise_colors = ['#0A67A5', '#E98F01', '#C31D25', '#E4E6EC', '#E1C591'];
@@ -12,12 +26,13 @@ class GF_TextCaptcha_Config {
   public $noise_height_range = [20, 200];
   public $noise_x_range = [-10, 70];
   public $noise_y_range = [-10, 50];
-  public $salt = null;
-  public $key = null;
+  public $salt = '';
+  public $key = '';
   public $fonts_path = null;
+  public $font_filename = null;
 
-  // Initialize from global configuration.
-  public function initialize() {
+  public function __construct() {
+    // Initialize from global configuration.
     if (defined('GF_TEXT_CAPTCHA_LENGTH')) {
       $length = intval(GF_TEXT_CAPTCHA_LENGTH);
       if ($length > 0) {
@@ -29,8 +44,12 @@ class GF_TextCaptcha_Config {
       $this->font = GF_TEXT_CAPTCHA_FONT;
     }
 
-    if (defined('GF_TEXT_CAPTCHA_FIGLET_ARGS')) {
-      $this->figlet_args = GF_TEXT_CAPTCHA_FIGLET_ARGS;
+    if (defined('GF_TEXT_CAPTCHA_WIDTH')) {
+      $this->width = intval(GF_TEXT_CAPTCHA_WIDTH);
+    }
+
+    if (defined('GF_TEXT_CAPTCHA_SMUSH_MODE')) {
+      $this->smush_mode = intval(GF_TEXT_CAPTCHA_SMUSH_MODE);
     }
 
     if (defined('GF_TEXT_CAPTCHA_ALLOWED_CHARS')) {
@@ -75,8 +94,15 @@ class GF_TextCaptcha_Config {
       $this->noise_y_range = $range;
     }
 
-    $this->salt = AUTH_SALT;
-    $this->key = AUTH_KEY;
-    $this->fonts_path = dirname(__FILE__) . '/../fonts';
+    if (defined('AUTH_SALT')) {
+      $this->salt = AUTH_SALT;
+    }
+
+    if (defined('AUTH_KEY')) {
+      $this->key = AUTH_KEY;
+    }
+
+    $this->fonts_path = __DIR__ . '/../fonts';
+    $this->font_filename = $this->fonts_path . "/" . $this->font . ".flf";
   }
 }

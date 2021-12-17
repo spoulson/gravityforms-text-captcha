@@ -8,7 +8,8 @@ function makeTestCfg() {
   $cfg = new GF_TextCaptcha_Config();
   $cfg->salt = 'FoobarSalt';
   $cfg->key = 'FoobarKey';
-  $cfg->fonts_path = dirname(__FILE__) . '/../../assets/fonts';
+  $cfg->fonts_path = __DIR__ . '/../../assets/fonts';
+  $cfg->font_filename = $cfg->fonts_path . '/roman.flf';
   return $cfg;
 }
 

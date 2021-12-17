@@ -1,5 +1,5 @@
-FROM php:7.4-alpine
-RUN apk add -U wget figlet make
+FROM php:8-alpine
+RUN apk add -U wget make
 
 # Install Composer.
 RUN wget -O /root/composer-setup https://getcomposer.org/installer

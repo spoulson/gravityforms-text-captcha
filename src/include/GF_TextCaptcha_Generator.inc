@@ -1,12 +1,22 @@
 <?php
+require_once __DIR__ . "/../vendor/autoload.php";
+
 // Generate CAPTCHA HTML.
 class GF_TextCaptcha_Generator {
   // GF_TextCaptcha_Config object.
   private $cfg;
 
+  // Laminas\Text\Figlet object.
+  private $figlet;
+
   // $cfg: GF_TextCaptcha_Config object
   function __construct($cfg) {
     $this->cfg = $cfg;
+    $this->figlet = new Laminas\Text\Figlet\Figlet([
+      'font' => $this->cfg->font_filename,
+      'outputWidth' => $this->cfg->width,
+      'smushMode' => $this->cfg->smush_mode
+    ]);
   }
 
   // Generate text CAPTCHA field HTML.
@@ -189,16 +199,7 @@ EOF;
     return openssl_encrypt($plaintext, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
   }
 
-  // Render figlet text.
-  // Convert input string to text-based ASCII art.
   private function make_figlet_image($str) {
-    $cmd = sprintf('figlet -d %s %s -f %s %s',
-      $this->cfg->fonts_path,
-      $this->cfg->figlet_args,
-      $this->cfg->font,
-      escapeshellcmd($str)
-    );
-    // TODO: Handle error.
-    return shell_exec($cmd);
+    return $this->figlet->render($str);
   }
 }

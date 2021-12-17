@@ -4,24 +4,25 @@ BUILD_ARTIFACT := gravityforms-text-captcha-${VERSION}.tar.gz
 
 .PHONY: lint
 lint: init
-	./vendor/bin/phplint
+	./src/vendor/bin/phplint
 
 .PHONY: test
 test: init
-	./vendor/bin/phpunit
+	./src/vendor/bin/phpunit
 
 .PHONY: build
 build: init
+	composer install --no-dev
 	find . -type d -maxdepth 1 -name build -exec rm -rf {} \;
 	mkdir -p build/gravityforms-text-captcha
-	cp -r assets/* src/include src/gravityforms-text-captcha.php build/gravityforms-text-captcha
+	cp -r assets/* src/include src/vendor src/gravityforms-text-captcha.php build/gravityforms-text-captcha
 	tar -zcvf ${BUILD_ARTIFACT} -C build gravityforms-text-captcha
 	@echo
 	@echo Built artifact: ${BUILD_ARTIFACT}
 
 .PHONY: clean
 clean: init
-	rm -rf build ${BUILD_ARTIFACT}
+	rm -rf build ${BUILD_ARTIFACT} src/vendor
 
 .PHONY: init
 init: githooks
