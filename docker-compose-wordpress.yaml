@@ -3,8 +3,7 @@
 version: "3.5"
 services:
   wordpress:
-    build:
-      dockerfile: Dockerfile-wordpress
+    image: wordpress:latest
     restart: always
     user: 33:33
     ports:

@@ -16,7 +16,6 @@ class GF_Field_TextCaptcha extends GF_Field {
     // Ensure generator singleton is created.
     if (empty(GF_Field_TextCaptcha::$generator)) {
       $cfg = new GF_TextCaptcha_Config();
-      $cfg->initialize();
       GF_Field_TextCaptcha::$generator = new GF_TextCaptcha_Generator($cfg);
     }
   }

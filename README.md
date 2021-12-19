@@ -22,6 +22,7 @@ For example:
 
 # System Requirements
 * WordPress 5.8 or newer.
+* PHP 8.0.2 or newer.
 * Gravity Forms 2.5 or newer.
 * Figlet installed on web server.
    * For example, on Debian-based systems: `apt install figlet`
@@ -44,8 +45,7 @@ Global constants optionally set in wp-config.php:
 Constant                        | Default         | Description
 ------------------------------- | --------------- | --------------------------------------
 `GF_TEXT_CAPTCHA_ALLOWED_CHARS` | *alphanumerics* | Allowed characters for CAPTCHA string.
-`GF_TEXT_CAPTCHA_FIGLET_ARGS`   | -w 1000         | Additional arguments to Figlet.
-`GF_TEXT_CAPTCHA_FONT`          | roman           | Figlet font name.
+`GF_TEXT_CAPTCHA_FONT`          | roman           | Figlet font filename sans ".flf" extension.
 `GF_TEXT_CAPTCHA_LENGTH`        | 6               | CAPTCHA character length.
 `GF_TEXT_CAPTCHA_NOISE_COLORS`  | #0A67A5,#E98F01,#C31D25,#E4E6EC,#E1C591 | Noise color scheme containing 1 or more colors, comma separated.
 `GF_TEXT_CAPTCHA_NOISE_COUNT`   | 5               | Number of noisy shapes rendered on the CAPTCHA.
@@ -54,12 +54,24 @@ Constant                        | Default         | Description
 `GF_TEXT_CAPTCHA_NOISE_WIDTH_RANGE` | 20,200      | Inclusive range of noise width in px, comma separated.
 `GF_TEXT_CAPTCHA_NOISE_X_RANGE` | -10,70          | Inclusive range of noise X offset in percent, comma separated.
 `GF_TEXT_CAPTCHA_NOISE_Y_RANGE` | -10,50          | Inclusive range of noise Y offset in percent, comma separated.
+`GF_TEXT_CAPTCHA_SMUSH_MODE`    | 0               | Figlet smush mode.
+`GF_TEXT_CAPTCHA_WIDTH`         | 1000            | Figlet output width.
 
 Add additional fonts by copying font files (with `flf` file extension) to the
 `fonts` directory and setting `GF_TEXT_CAPTCHA_FONT` to the filename without
 extension.
 
 To RTFM on Figlet and find more fonts, see http://www.figlet.org.
+
+## Smush Mode
+Bitmask of layout modes.  See:
+* https://github.com/laminas/laminas-text/blob/8879e75d03e09b0d6787e6680cfa255afd4645a7/src/Figlet/Figlet.php#L21
+* https://github.com/laminas/laminas-text/blob/8879e75d03e09b0d6787e6680cfa255afd4645a7/src/Figlet/Figlet.php#L373
+
+Special values:
+* Default 0 is equivalent to `SM_KERN` (64).
+* -1 disables smush.
+* All greater than 0 implies `SM_SMUSH` (128), so no need to include this flag.
 
 # Developer Setup
 1. Install Composer: https://getcomposer.org
