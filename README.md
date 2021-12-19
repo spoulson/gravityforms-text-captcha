@@ -10,7 +10,7 @@ easily readable by a human.
 
 For example:
 
-<img src="https://github.com/spoulson/gravityforms-text-captcha/raw/d3aab0b03a0c1f0ec06eee1ec8b4765a415dd37b/CAPTCHA%20example.png" width="500" alt="CAPTCHA example" />
+<img src="https://github.com/spoulson/gravityforms-text-captcha/raw/45d529888b3d45b39fad8eb47b5a482d66d9aa57/docs/CAPTCHA%20example.png" width="500" alt="CAPTCHA example" />
 
 # Features
 * Easy to use out of the box.
@@ -21,12 +21,11 @@ For example:
   and colors to make OCR text recognition and manual entry more difficult.
 
 # System Requirements
-* WordPress 5.8 or newer.
 * PHP 8.0.2 or newer.
+* WordPress 5.8 or newer.
 * Gravity Forms 2.5 or newer.
-* Figlet installed on web server.
-   * For example, on Debian-based systems: `apt install figlet`
-   * Test figlet with command such as `figlet Test` to render "Test" in ASCII art.
+* WordPress REST API not disabled.
+  * Or for security plugins like WP Cerber, a REST API exception must be added.
 
 # Installation from Source
 1. Run `make build` to build the file:
@@ -72,6 +71,13 @@ Special values:
 * Default 0 is equivalent to `SM_KERN` (64).
 * -1 disables smush.
 * All greater than 0 implies `SM_SMUSH` (128), so no need to include this flag.
+
+# WP Cerber
+WP Cerber is a great tool for hardening security of a WordPress site.  By default, it disables REST API, but this plugin requires REST API to render the CAPTCHA.
+
+For proper function, either ensure REST API is not disabled or add a REST API exception for namespace "gravityforms-text-captcha" in the admin page -> WP Cerber -> Hardening tab -> Allow these namespaces.
+
+<img src="https://github.com/spoulson/gravityforms-text-captcha/raw/45d529888b3d45b39fad8eb47b5a482d66d9aa57/docs/WP%20Cerber%20REST%20API%20exception.png" width="500" alt="WP Cerber REST API exception" />
 
 # Developer Setup
 1. Install Composer: https://getcomposer.org
